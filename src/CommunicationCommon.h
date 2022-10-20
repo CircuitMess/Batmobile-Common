@@ -3,28 +3,33 @@
 
 #include <Loop/LoopListener.h>
 #include <AsyncTCP.h>
+#include "ComType.h"
+#include "DisconnectListener.h"
+#include <Buffer/RingBuffer.h>
 
 struct ControlPacket {
-    //TODO: change ControlPacket
-    char dummyData[10];
+    ComType type;
+    uint8_t data;
 };
 
 class CommunicationCommon : private LoopListener{
 public:
-    void setDcListener();
+    CommunicationCommon();
     bool isConnected();
-    void loop(uint micros) override;
+    void setDcListener(DisconnectListener* listener);
 
 protected:
     virtual void setClient(AsyncClient *client);
-    ControlPacket sendPacket(ControlPacket& packet);
+    void sendPacket(const ControlPacket& packet);
     virtual bool isWiFiConnected() = 0;
     virtual void processPacket(ControlPacket& packet) = 0;
 
 private:
-    AsyncClient* stream;
+    void loop(uint micros) override;
     bool isClientConnected();
-
+    DisconnectListener* dcListener  = nullptr;
+    AsyncClient* client = nullptr;
+    RingBuffer data;
 };
 
 #endif //BATMOBILE_COMMON_COMMUNICATIONCOMMON_H
