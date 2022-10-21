@@ -6,17 +6,21 @@
 #include "ComType.h"
 #include "DisconnectListener.h"
 #include <Buffer/RingBuffer.h>
+#include <memory>
+#include <unordered_set>
+#include <Util/WithListeners.h>
 
 struct ControlPacket {
     ComType type;
     uint8_t data;
 };
 
-class CommunicationCommon : private LoopListener{
+class CommunicationCommon : private LoopListener, private WithListeners<DisconnectListener>{
 public:
-    CommunicationCommon();
-    bool isConnected();
-    void setDcListener(DisconnectListener* listener);
+	CommunicationCommon();
+	bool isConnected();
+	void addDcListener(DisconnectListener* listener);
+	void removeDcListener(DisconnectListener* listener);
 
 protected:
     virtual void setClient(AsyncClient *client);

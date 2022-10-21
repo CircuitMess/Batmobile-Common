@@ -3,12 +3,11 @@
 CommunicationCommon::CommunicationCommon() : data(1024){
 }
 
-void CommunicationCommon::setDcListener(DisconnectListener* listener){
-	dcListener = listener;
+void CommunicationCommon::removeDcListener(DisconnectListener* listener){
+	WithListeners<DisconnectListener>::removeListener(listener);
 }
 
 bool CommunicationCommon::isConnected(){
-	Serial.println("CC.isConnected()");
 	return isWiFiConnected() && isClientConnected();
 }
 
@@ -39,6 +38,10 @@ void CommunicationCommon::setClient(AsyncClient* aClient){
 	client->onTimeout([this](void*, AsyncClient*, uint32_t time){
 		Serial.printf("timeout error %d passed\n", time);
 	}, nullptr);
+}
+
+void CommunicationCommon::addDcListener(DisconnectListener* listener){
+	WithListeners<DisconnectListener>::addListener(listener);
 }
 
 void CommunicationCommon::sendPacket(const ControlPacket& packet){
