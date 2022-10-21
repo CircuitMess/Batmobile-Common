@@ -3,10 +3,10 @@
 
 #include <WiFi.h>
 
-extern IPAddress batmobileIP;
-extern IPAddress controllerIP;
-extern IPAddress gateway;
-extern IPAddress subnet;
-extern uint16_t port;
+const extern IPAddress batmobileIP;
+const extern IPAddress controllerIP;
+const extern IPAddress gateway;
+const extern IPAddress subnet;
+const extern uint16_t port;
 
 #endif //BATMOBILE_COMMON_NETWORKCONFIG_H
