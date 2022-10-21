@@ -31,6 +31,7 @@ protected:
 private:
 	void loop(uint micros) override;
 	bool isClientConnected();
+	void handleDisconnect();
 	std::unique_ptr<AsyncClient> client;
 	RingBuffer data;
 };

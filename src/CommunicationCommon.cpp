@@ -16,8 +16,8 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 	if(!client) return;
 
 	client->onDisconnect([this](void*, AsyncClient* server){
-		//TODO - reconnect to wifi in case of total disconnect
 		Serial.println("client disconnected from port");
+		handleDisconnect();
 	});
 
 	client->onData([this](void* arg, AsyncClient* server, void* data, size_t len){
@@ -28,10 +28,12 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 	client->onError([this](void*, AsyncClient* c, int8_t error){
 		Serial.print("error occurred: ");
 		Serial.println(c->errorToString(error));
+		handleDisconnect();
 	}, nullptr);
 
 	client->onTimeout([this](void*, AsyncClient*, uint32_t time){
 		Serial.printf("timeout error %d passed\n", time);
+		handleDisconnect();
 	}, nullptr);
 }
 
@@ -60,4 +62,12 @@ void CommunicationCommon::loop(uint micros){
 		data.read(reinterpret_cast<uint8_t*>(&packet), sizeof(ControlPacket));
 		processPacket(packet);
 	}
+}
+
+void CommunicationCommon::handleDisconnect(){
+	client.release();
+	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
+		listener->onDisconnected();
+	});
+
 }
