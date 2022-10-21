@@ -21,7 +21,6 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 	});
 
 	client->onData([this](void* arg, AsyncClient* server, void* data, size_t len){
-		Serial.write((uint8_t*) data, len);
 		this->data.write(static_cast<uint8_t*>(data), len);
 	}, nullptr);
 
