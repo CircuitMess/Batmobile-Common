@@ -11,13 +11,9 @@ bool CommunicationCommon::isConnected(){
 	return isWiFiConnected() && isClientConnected();
 }
 
-void CommunicationCommon::setClient(AsyncClient* aClient){
-	delete client;
-	client = aClient;
-
-	client->onConnect([this](void*, AsyncClient* client){
-		Serial.printf("Connected\n");
-	}, nullptr);
+void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
+	client = std::move(aClient);
+	if(!client) return;
 
 	client->onDisconnect([this](void*, AsyncClient* server){
 		//TODO - reconnect to wifi in case of total disconnect
@@ -25,10 +21,9 @@ void CommunicationCommon::setClient(AsyncClient* aClient){
 	});
 
 	client->onData([this](void* arg, AsyncClient* server, void* data, size_t len){
-		Serial.printf("\nData received from %s \n", client->remoteIP().toString().c_str());
 		Serial.write((uint8_t*) data, len);
 		this->data.write(static_cast<uint8_t*>(data), len);
-	}, client);
+	}, nullptr);
 
 	client->onError([this](void*, AsyncClient* c, int8_t error){
 		Serial.print("error occurred: ");
@@ -45,12 +40,15 @@ void CommunicationCommon::addDcListener(DisconnectListener* listener){
 }
 
 void CommunicationCommon::sendPacket(const ControlPacket& packet){
-	if(!client->canSend()) return; //Needs to be added, otherwise it crashes
+	if(!client) return;
+	if(!client->canSend()) return;
+
 	client->add(reinterpret_cast<const char*>(&packet), sizeof(ControlPacket));
 	client->send();
 }
 
 bool CommunicationCommon::isClientConnected(){
+	if(!client) return false;
 	return client->connected();
 }
 
