@@ -11,8 +11,8 @@
 #include <Util/WithListeners.h>
 
 struct ControlPacket {
-    ComType type;
-    uint8_t data;
+	ComType type;
+	uint8_t data;
 };
 
 class CommunicationCommon : private LoopListener, private WithListeners<DisconnectListener>{
@@ -26,7 +26,7 @@ protected:
 	virtual void setClient(std::unique_ptr<AsyncClient> client);
 	void sendPacket(const ControlPacket& packet);
 	virtual bool isWiFiConnected() = 0;
-	virtual void processPacket(ControlPacket& packet) = 0;
+	virtual void processPacket(const ControlPacket& packet) = 0;
 
 private:
 	void loop(uint micros) override;

@@ -53,6 +53,8 @@ bool CommunicationCommon::isClientConnected(){
 }
 
 void CommunicationCommon::loop(uint micros){
+	if(data.readAvailable() < sizeof(ControlPacket)) return;
+
 	ControlPacket packet;
 	while(data.readAvailable() >= sizeof(ControlPacket)){
 		data.read(reinterpret_cast<uint8_t*>(&packet), sizeof(ControlPacket));
