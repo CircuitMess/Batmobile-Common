@@ -1,7 +1,7 @@
 #include "DriveInfo.h"
 #include <memory>
 
-const char* tag = "DataModel";
+static const char* tag = "DataModel";
 
 size_t DriveInfo::size() const{
 	size_t size = baseSize + frame.size;
