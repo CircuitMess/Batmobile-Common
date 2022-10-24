@@ -36,36 +36,43 @@ DriveInfo::~DriveInfo(){
 }
 
 void DriveInfo::toData(void* dest) const{
-	auto data = (uint8_t*)dest;
-	memcpy(data, &mode, baseSize);
-	data+= baseSize;
+	auto data = (uint8_t*) dest;
+	memcpy(data, &mode, sizeof(DriveMode));
+	data += sizeof(DriveMode);
+
+	memcpy(data, &motors, sizeof(MotorInfo));
+	data += sizeof(MotorInfo);
+
+	memcpy(data, &frame.size, sizeof(CamFrame::size));
+	data += sizeof(CamFrame::size);
+
 	memcpy(data, frame.data, frame.size);
-	data +=frame.size;
+	data += frame.size;
 
 	if(mode == DriveMode::Manual || mode == DriveMode::Idle) return;
 
 	switch(mode){
 		case DriveMode::Ball:
-			*data = (uint8_t)toBall()->balls.size();
+			*data = (uint8_t) toBall()->balls.size();
 			data++;
-			for(auto& ball : toBall()->balls){
-				memcpy(data, (uint8_t*)&ball, sizeof(Ball));
-				data+=sizeof(Ball);
+			for(auto& ball: toBall()->balls){
+				memcpy(data, (uint8_t*) &ball, sizeof(Ball));
+				data += sizeof(Ball);
 			}
 			break;
 
 		case DriveMode::Line:
-			*data = (uint8_t)toLine()->lineStatus;
+			*data = (uint8_t) toLine()->lineStatus;
 			break;
 
 		case DriveMode::Marker:
-			*data = (uint8_t)toMarker()->markers.size();
+			*data = (uint8_t) toMarker()->markers.size();
 			data++;
-			for(auto& marker : toMarker()->markers){
-				memcpy(data, (uint8_t*)&marker, sizeof(Marker));
-				data+=sizeof(Marker);
+			for(auto& marker: toMarker()->markers){
+				memcpy(data, (uint8_t*) &marker, sizeof(Marker));
+				data += sizeof(Marker);
 			}
-			*data = (uint8_t)toMarker()->action;
+			*data = (uint8_t) toMarker()->action;
 			break;
 
 		default:

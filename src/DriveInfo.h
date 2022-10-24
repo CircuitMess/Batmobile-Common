@@ -59,7 +59,7 @@ struct LineDriveInfo;
 struct MarkerDriveInfo;
 
 struct DriveInfo {
-	DriveMode mode;
+	DriveMode mode = DriveMode::Idle;
 	MotorInfo motors{};
 	CamFrame frame{};
 
