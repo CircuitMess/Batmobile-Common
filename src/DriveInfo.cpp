@@ -44,9 +44,6 @@ void DriveInfo::toData(void* dest) const{
 
 	if(mode == DriveMode::Manual || mode == DriveMode::Idle) return;
 
-	auto ballInfo = toBall();
-	auto markerInfo = toMarker();
-
 	switch(mode){
 		case DriveMode::Ball:
 			*data = (uint8_t)toBall()->balls.size();

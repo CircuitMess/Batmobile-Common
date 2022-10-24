@@ -67,6 +67,7 @@ struct DriveInfo {
 
 	/**
 	 * Returns size of struct in binary form, including all elements and sub-elements.
+	 * Note: data size varies by DriveMode.
 	 * @return Struct size.
 	 */
 	virtual size_t size() const;
