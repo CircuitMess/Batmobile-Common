@@ -1,6 +1,6 @@
 #include "DriveInfo.h"
 #include <memory>
-
+#include <esp_heap_caps.h>
 static const char* tag = "DataModel";
 
 size_t DriveInfo::size() const{
@@ -115,7 +115,12 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 		return nullptr;
 	}
 
-	info->frame.data = malloc(buf.readAvailable());
+	info->frame.data = malloc(info->frame.size);
+
+	if(info->frame.data == nullptr){
+		ESP_LOGE(tag, "Couldn't allocate buffer for jpg frame data, free heap: %zu, largest alloc: %zu, needed: %zu", ESP.getFreeHeap(), heap_caps_get_largest_free_block(MALLOC_CAP_8BIT | MALLOC_CAP_INTERNAL), info->frame.size);
+		return nullptr;
+	}
 	buf.read((uint8_t*) info->frame.data, info->frame.size);
 
 	if(mode == DriveMode::Manual || mode == DriveMode::Idle) return info;
