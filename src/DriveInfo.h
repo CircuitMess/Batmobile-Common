@@ -24,8 +24,8 @@ struct Marker {
 };
 
 struct CamFrame {
-	size_t size;
-	void* data;
+	size_t size = 0;
+	void* data = nullptr;
 };
 
 struct MotorInfo {
@@ -58,8 +58,8 @@ struct MarkerDriveInfo;
 
 struct DriveInfo {
 	DriveMode mode = DriveMode::Idle;
-	MotorInfo motors{};
-	CamFrame frame{};
+	MotorInfo motors = { };
+	CamFrame frame = { };
 
 	static constexpr size_t baseSize = sizeof(DriveMode) + sizeof(MotorInfo) + sizeof(CamFrame::size);
 
