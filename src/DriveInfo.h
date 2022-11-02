@@ -8,20 +8,18 @@
 #include <vector>
 #include <memory>
 
-using namespace glm;
-
 enum class LineStatus : uint8_t {
 	OnLine, OffLine
 };
 
 struct Ball {
-	vec<2, int16_t> pos;
+	glm::vec<2, int16_t> pos;
 	uint16_t r;
 	uint8_t hue;
 };
 
 struct Marker {
-	vec<2, int16_t> projected[4];
+	glm::vec<2, int16_t> projected[4];
 	uint16_t id;
 };
 
