@@ -18,12 +18,15 @@ struct ControlPacket {
 class CommunicationCommon : private LoopListener, private WithListeners<DisconnectListener>{
 public:
 	CommunicationCommon();
+
+	void setClient(std::unique_ptr<AsyncClient> client);
+
 	bool isConnected();
+
 	void addDcListener(DisconnectListener* listener);
 	void removeDcListener(DisconnectListener* listener);
 
 protected:
-	virtual void setClient(std::unique_ptr<AsyncClient> client);
 	void sendPacket(const ControlPacket& packet);
 	virtual bool isWiFiConnected() = 0;
 	virtual void processPacket(const ControlPacket& packet) = 0;
