@@ -1,4 +1,5 @@
 #include "CommunicationCommon.h"
+#include <Loop/LoopManager.h>
 
 CommunicationCommon::CommunicationCommon() : data(1024){
 }
@@ -34,6 +35,8 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 		Serial.printf("timeout error %d passed\n", time);
 		handleDisconnect();
 	}, nullptr);
+
+	LoopManager::addListener(this);
 }
 
 void CommunicationCommon::addDcListener(DisconnectListener* listener){
