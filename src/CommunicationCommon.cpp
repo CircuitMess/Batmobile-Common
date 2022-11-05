@@ -76,7 +76,7 @@ void CommunicationCommon::loop(uint micros){
 }
 
 void CommunicationCommon::handleDisconnect(){
-	client.release();
+	client.reset();
 	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
 		listener->onDisconnected();
 	});
