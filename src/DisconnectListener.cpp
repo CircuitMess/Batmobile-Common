@@ -3,3 +3,7 @@
 void DisconnectListener::onDisconnected() {
 
 }
+
+void DisconnectListener::onConnected(){
+
+}

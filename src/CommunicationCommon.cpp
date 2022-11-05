@@ -37,6 +37,10 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 	}, nullptr);
 
 	LoopManager::addListener(this);
+
+	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
+		listener->onConnected();
+	});
 }
 
 void CommunicationCommon::addDcListener(DisconnectListener* listener){
