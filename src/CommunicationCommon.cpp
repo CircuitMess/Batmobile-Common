@@ -13,6 +13,11 @@ bool CommunicationCommon::isConnected(){
 }
 
 void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
+	// TODO: is this a good idea?
+	if(client){
+		handleDisconnect();
+	}
+
 	client = std::move(aClient);
 	if(!client) return;
 
