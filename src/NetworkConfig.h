@@ -13,6 +13,7 @@ const extern uint16_t feedPort;
 #define FEED_ENV_LEN 8
 const extern uint8_t FrameHeader[FEED_ENV_LEN];
 const extern uint8_t FrameTrailer[FEED_ENV_LEN];
+const extern uint8_t FrameSizeShift[4];
 
 
 #endif //BATMOBILE_COMMON_NETWORKCONFIG_H
