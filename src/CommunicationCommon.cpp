@@ -41,6 +41,8 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 		handleDisconnect();
 	}, nullptr);
 
+	client->setAckTimeout(3000);
+
 	LoopManager::addListener(this);
 
 	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
