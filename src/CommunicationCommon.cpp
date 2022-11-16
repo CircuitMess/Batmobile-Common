@@ -68,6 +68,11 @@ bool CommunicationCommon::isClientConnected(){
 }
 
 void CommunicationCommon::loop(uint micros){
+	if(client && client->connected() && !isConnected()){
+		handleDisconnect();
+		return;
+	}
+
 	if(data.readAvailable() < sizeof(ControlPacket)) return;
 
 	ControlPacket packet;
