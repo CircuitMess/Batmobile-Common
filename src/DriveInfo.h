@@ -60,6 +60,7 @@ enum class MarkerAction : uint8_t {
 struct BallDriveInfo;
 struct LineDriveInfo;
 struct MarkerDriveInfo;
+struct QRDriveInfo;
 
 struct DriveInfo {
 	DriveMode mode = DriveMode::Idle;
@@ -109,6 +110,12 @@ struct DriveInfo {
 	 * @return MarkerDriveInfo pointer if mode == MarkerDrive, otherwise nullptr
 	 */
 	MarkerDriveInfo* toMarker() const;
+
+    /**
+     *  Converts the DriveInfo struct to its QRDriveInfo derivative.
+     * @return QRDriveInfo pointer if mode == QRDrive, otherwise nullptr
+    */
+    QRDriveInfo* toQR() const;
 };
 
 struct BallDriveInfo : DriveInfo {
@@ -122,6 +129,10 @@ struct LineDriveInfo : DriveInfo {
 struct MarkerDriveInfo : DriveInfo {
 	MarkerAction action;
 	std::vector<Marker> markers;
+};
+
+struct QRDriveInfo : DriveInfo {
+    std::vector<QRMarker> qrMarkers;
 };
 
 #endif //BATMOBILE_COMMON_DRIVEINFO_H
