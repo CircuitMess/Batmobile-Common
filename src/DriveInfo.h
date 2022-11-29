@@ -23,6 +23,11 @@ struct Marker {
 	uint16_t id;
 };
 
+struct QRMarker {
+    glm::vec<2, int16_t> projected[4];
+    uint8_t data[53];
+};
+
 struct CamFrame {
 	size_t size = 0;
 	void* data = nullptr;
