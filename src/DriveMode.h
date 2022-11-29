@@ -2,7 +2,7 @@
 #define BATMOBILE_COMMON_DRIVEMODE_H
 
 enum class DriveMode : uint8_t {
-	Idle, Manual, Ball, Line, Marker
+	Idle, Manual, Ball, Line, Marker, QRScan
 };
 
 #endif //BATMOBILE_COMMON_DRIVEMODE_H
