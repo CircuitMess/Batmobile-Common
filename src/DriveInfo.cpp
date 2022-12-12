@@ -21,6 +21,11 @@ size_t DriveInfo::size() const{
 			size += sizeof(MarkerAction); //current action
 			break;
 
+        case DriveMode::QRScan:
+            size += 1; //length of QRMarkers vector
+            size += toQR()->qrMarkers.size() * sizeof(QRMarker); //QRMarkers vector
+            break;
+
 		default:
 			break;
 	}
@@ -75,6 +80,16 @@ void DriveInfo::toData(void* dest) const{
 			*data = (uint8_t) toMarker()->action;
 			break;
 
+        case DriveMode::QRScan:
+            *data = (uint8_t) toQR()->qrMarkers.size();
+            data++;
+
+            for(const auto& marker : toQR()->qrMarkers){
+                memcpy(data, (uint8_t*)&marker, sizeof(QRMarker));
+                data += sizeof(QRMarker);
+            }
+            break;
+
 		default:
 			break;
 	}
@@ -100,6 +115,9 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 		case DriveMode::Marker:
 			info = std::make_unique<MarkerDriveInfo>();
 			break;
+        case DriveMode::QRScan:
+            info = std::make_unique<QRDriveInfo>();
+            break;
 		default:
 			info = std::make_unique<DriveInfo>();
 			break;
@@ -133,6 +151,7 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 
 	auto ballInfo = info->toBall();
 	auto markerInfo = info->toMarker();
+    auto qrInfo = info->toQR();
 
 	switch(mode){
 		case DriveMode::Ball:
@@ -174,6 +193,21 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 
 			break;
 
+        case DriveMode::QRScan:
+            info->toQR()->qrMarkers.reserve(numElements);
+            if(buf.readAvailable() < numElements * sizeof(QRMarker)){
+                ESP_LOGE(tag, "Deserialize data is of type %d, but lacks type-specific data after JPG");
+                return nullptr;
+            }
+
+            for(uint8_t i = 0; i < numElements; ++i){
+                QRMarker qrMarker{};
+                buf.read((uint8_t*) (&qrMarker), sizeof(QRMarker));
+                qrInfo->qrMarkers.push_back(qrMarker);
+            }
+
+            break;
+
 		default:
 			break;
 	}
@@ -194,4 +228,9 @@ BallDriveInfo* DriveInfo::toBall() const{
 MarkerDriveInfo* DriveInfo::toMarker() const{
 	if(mode != DriveMode::Marker) return nullptr;
 	return (MarkerDriveInfo*) this;
+}
+
+QRDriveInfo* DriveInfo::toQR() const {
+    if(mode != DriveMode::QRScan) return nullptr;
+    return (QRDriveInfo*) this;
 }
