@@ -8,6 +8,15 @@
 #include <vector>
 #include <memory>
 
+enum class ProximitySensor : uint8_t {
+	Mid, Left, Right
+};
+
+union ProximityData {
+	struct { uint16_t mid, left, right; };
+	uint16_t raw[3];
+};
+
 enum class LineStatus : uint8_t {
 	OnLine, OffLine
 };
