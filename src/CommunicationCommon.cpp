@@ -68,7 +68,7 @@ bool CommunicationCommon::isClientConnected(){
 }
 
 void CommunicationCommon::loop(uint micros){
-	if(client && client->connected() && !isConnected() && disconnectHandled){
+	if(disconnectHandled){
 		disconnectHandled = false;
 		client.reset();
 		return;
@@ -84,9 +84,11 @@ void CommunicationCommon::loop(uint micros){
 }
 
 void CommunicationCommon::handleDisconnect(){
-	disconnectHandled = true;
-	client->close(true);
+	if(disconnectHandled) return;
+
+	if(client) client->close(true);
 	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
 		listener->onDisconnected();
 	});
+	disconnectHandled = true;
 }
