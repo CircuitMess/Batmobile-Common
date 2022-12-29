@@ -39,6 +39,8 @@ private:
 	void handleDisconnect();
 	std::unique_ptr<AsyncClient> client;
 	RingBuffer data;
+
+	bool disconnectHandled = false;
 };
 
 #endif //BATMOBILE_COMMON_COMMUNICATIONCOMMON_H
