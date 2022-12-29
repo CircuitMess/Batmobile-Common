@@ -60,7 +60,7 @@ void DriveInfo::toData(void* dest) const{
 		case DriveMode::Ball:
 			*data = (uint8_t) toBall()->balls.size();
 			data++;
-			for(auto& ball: toBall()->balls){
+			for(const auto& ball: toBall()->balls){
 				memcpy(data, (uint8_t*) &ball, sizeof(Ball));
 				data += sizeof(Ball);
 			}
@@ -73,7 +73,7 @@ void DriveInfo::toData(void* dest) const{
 		case DriveMode::Marker:
 			*data = (uint8_t) toMarker()->markers.size();
 			data++;
-			for(auto& marker: toMarker()->markers){
+			for(const auto& marker : toMarker()->markers){
 				memcpy(data, (uint8_t*) &marker, sizeof(Marker));
 				data += sizeof(Marker);
 			}
