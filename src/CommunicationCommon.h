@@ -19,6 +19,7 @@ class CommunicationCommon : private LoopListener, private WithListeners<Disconne
 public:
 	CommunicationCommon();
 
+	void end();
 	void setClient(std::unique_ptr<AsyncClient> client);
 
 	bool isConnected();
@@ -30,6 +31,7 @@ protected:
 	void sendPacket(const ControlPacket& packet);
 	virtual bool isWiFiConnected() = 0;
 	virtual void processPacket(const ControlPacket& packet) = 0;
+	virtual void onLoop(uint micros){};
 
 private:
 	void loop(uint micros) override;
