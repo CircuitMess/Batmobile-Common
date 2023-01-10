@@ -4,7 +4,8 @@
 #include <WiFi.h>
 
 const extern IPAddress batmobileIP;
-const extern IPAddress controllerIP;
+extern IPAddress controllerIP;
+const extern IPAddress defaultControllerIP;
 const extern IPAddress gateway;
 const extern IPAddress subnet;
 const extern uint16_t controlPort;
