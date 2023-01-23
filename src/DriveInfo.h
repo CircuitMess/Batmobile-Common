@@ -142,6 +142,7 @@ struct MarkerDriveInfo : DriveInfo {
 
 struct QRDriveInfo : DriveInfo {
     std::vector<QRMarker> qrMarkers;
+	std::vector<Marker> arucoMarkers;
 };
 
 #endif //BATMOBILE_COMMON_DRIVEINFO_H

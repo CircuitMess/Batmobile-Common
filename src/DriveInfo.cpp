@@ -88,6 +88,15 @@ void DriveInfo::toData(void* dest) const{
                 memcpy(data, (uint8_t*)&marker, sizeof(QRMarker));
                 data += sizeof(QRMarker);
             }
+
+			*data = (uint8_t) toQR()->arucoMarkers.size();
+			data++;
+
+			for(const auto& marker : toQR()->arucoMarkers){
+				memcpy(data, (uint8_t*)&marker, sizeof(Marker));
+				data += sizeof(Marker);
+			}
+
             break;
 
 		default:
@@ -205,6 +214,22 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
                 buf.read((uint8_t*) (&qrMarker), sizeof(QRMarker));
                 qrInfo->qrMarkers.push_back(qrMarker);
             }
+
+			if(!buf.read(&numElements, 1)){
+				ESP_LOGE(tag, "Deserialize data is of type %d, but lacks type-specific data after JPG", (int) info->mode);
+				return nullptr;
+			}
+
+			if(buf.readAvailable() < numElements * sizeof(QRMarker)){
+				ESP_LOGE(tag, "Deserialize data is of type QR, but lacks type-specific data after JPG");
+				return nullptr;
+			}
+
+			for(uint8_t i = 0; i < numElements; ++i){
+				Marker marker{};
+				buf.read((uint8_t*) (&marker), sizeof(Marker));
+				qrInfo->arucoMarkers.push_back(marker);
+			}
 
             break;
 
