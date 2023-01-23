@@ -24,6 +24,8 @@ size_t DriveInfo::size() const{
         case DriveMode::QRScan:
             size += 1; //length of QRMarkers vector
             size += toQR()->qrMarkers.size() * sizeof(QRMarker); //QRMarkers vector
+			size += 1; //length of Markers vector
+			size += toQR()->arucoMarkers.size() * sizeof(Marker); //Markers vector
             break;
 
 		default:
