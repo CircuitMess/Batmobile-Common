@@ -2,6 +2,7 @@
 #include <Loop/LoopManager.h>
 
 CommunicationCommon::CommunicationCommon() : data(1024){
+	WithListeners<DisconnectListener>::reserve(16);
 }
 
 void CommunicationCommon::removeDcListener(DisconnectListener* listener){
