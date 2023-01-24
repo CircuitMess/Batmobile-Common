@@ -166,13 +166,12 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 
 	switch(mode){
 		case DriveMode::Ball:
-			ballInfo->balls.reserve(numElements);
-
 			if(buf.readAvailable() < numElements * sizeof(Ball)){
 				ESP_LOGE(tag, "Deserialize data is of type %d, but lacks type-specific data after JPG");
 				return nullptr;
 			}
 
+			ballInfo->balls.reserve(numElements);
 			for(uint8_t i = 0; i < numElements; ++i){
 				Ball ball{};
 				buf.read((uint8_t*) (&ball), sizeof(Ball));
@@ -188,12 +187,12 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 
 
 		case DriveMode::Marker:
-			info->toMarker()->markers.reserve(numElements);
 			if(buf.readAvailable() < numElements * sizeof(Marker) + sizeof(MarkerAction)){
 				ESP_LOGE(tag, "Deserialize data is of type %d, but lacks type-specific data after JPG");
 				return nullptr;
 			}
 
+			info->toMarker()->markers.reserve(numElements);
 			for(uint8_t i = 0; i < numElements; ++i){
 				Marker marker{};
 				buf.read((uint8_t*) (&marker), sizeof(Marker));
@@ -205,12 +204,12 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 			break;
 
         case DriveMode::QRScan:
-            info->toQR()->qrMarkers.reserve(numElements);
             if(buf.readAvailable() < numElements * sizeof(QRMarker)){
                 ESP_LOGE(tag, "Deserialize data is of type %d, but lacks type-specific data after JPG");
                 return nullptr;
             }
 
+			info->toQR()->qrMarkers.reserve(numElements);
             for(uint8_t i = 0; i < numElements; ++i){
                 QRMarker qrMarker{};
                 buf.read((uint8_t*) (&qrMarker), sizeof(QRMarker));
@@ -222,11 +221,12 @@ std::unique_ptr<DriveInfo> DriveInfo::deserialize(RingBuffer& buf, size_t size){
 				return nullptr;
 			}
 
-			if(buf.readAvailable() < numElements * sizeof(QRMarker)){
+			if(buf.readAvailable() < numElements * sizeof(Marker)){
 				ESP_LOGE(tag, "Deserialize data is of type QR, but lacks type-specific data after JPG");
 				return nullptr;
 			}
 
+			info->toQR()->arucoMarkers.reserve(numElements);
 			for(uint8_t i = 0; i < numElements; ++i){
 				Marker marker{};
 				buf.read((uint8_t*) (&marker), sizeof(Marker));
