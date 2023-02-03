@@ -18,7 +18,8 @@ enum class ComType : uint8_t {
 	Headlights,
 	Taillights,
 	Underlights,
-	SoundEffect
+	SoundEffect,
+	Dance
 };
 
 #endif //BATMOBILE_LIBRARY_COMTYPE_H
