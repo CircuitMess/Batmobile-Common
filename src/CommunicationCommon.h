@@ -40,6 +40,9 @@ private:
 	std::unique_ptr<AsyncClient> client;
 	RingBuffer data;
 
+	virtual void onConnect(){};
+	virtual void onDisconnect(){};
+
 	bool disconnectHandled = false;
 };
 
