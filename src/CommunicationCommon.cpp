@@ -44,6 +44,7 @@ void CommunicationCommon::setClient(std::unique_ptr<AsyncClient> aClient){
 
 	client->setAckTimeout(3000);
 
+	onConnect();
 	LoopManager::addListener(this);
 
 	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
@@ -71,9 +72,17 @@ bool CommunicationCommon::isClientConnected(){
 void CommunicationCommon::loop(uint micros){
 	onLoop(micros);
 
+	if(!isConnected() && !disconnectHandled){
+		Serial.printf("wifi: %d, client: %d\n", isWiFiConnected(), isClientConnected());
+		if(!client) Serial.println("client nullptr");
+		else Serial.printf("client->connected: %d\n", client->connected());
+		handleDisconnect();
+	}
+
 	if(disconnectHandled){
 		disconnectHandled = false;
 		client.reset();
+		LoopManager::removeListener(this);
 		return;
 	}
 
@@ -93,6 +102,7 @@ void CommunicationCommon::handleDisconnect(){
 	WithListeners<DisconnectListener>::iterateListeners([](DisconnectListener* listener){
 		listener->onDisconnected();
 	});
+	onDisconnect();
 	disconnectHandled = true;
 }
 
