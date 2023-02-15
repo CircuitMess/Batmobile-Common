@@ -4,7 +4,7 @@
 #include <cstdint>
 
 enum class DanceType : uint8_t{
-    Idle, Wiggle, BackNFront, Spin, BackItUp
+    Idle, Wiggle, BackNFront, Spin, BackItUp, Waltz
 };
 
 #endif //BATMOBILE_COMMON_DANCETYPE_H
