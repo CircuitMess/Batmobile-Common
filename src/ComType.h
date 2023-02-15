@@ -20,7 +20,9 @@ enum class ComType : uint8_t {
 	Underlights,
 	SoundEffect,
 	Dance,
-	OverrideSound
+	OverrideSound,
+	MotorsTimeout,
+	MotorsTimeoutClear
 };
 
 #endif //BATMOBILE_LIBRARY_COMTYPE_H
