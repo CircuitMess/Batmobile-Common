@@ -22,7 +22,8 @@ enum class ComType : uint8_t {
 	Dance,
 	OverrideSound,
 	MotorsTimeout,
-	MotorsTimeoutClear
+	MotorsTimeoutClear,
+	IdleSounds
 };
 
 #endif //BATMOBILE_LIBRARY_COMTYPE_H
