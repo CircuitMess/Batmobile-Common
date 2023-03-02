@@ -15,10 +15,15 @@ struct ControlPacket {
 	uint8_t data;
 };
 
-class CommunicationCommon : private LoopListener, private WithListeners<DisconnectListener>{
+enum class ComMode : uint8_t {
+	Direct, External
+};
+
+class CommunicationCommon : private LoopListener, private WithListeners<DisconnectListener> {
 public:
 	CommunicationCommon();
 
+	virtual void begin(){};
 	void end();
 	void setClient(std::unique_ptr<AsyncClient> client);
 
@@ -27,20 +32,30 @@ public:
 	void addDcListener(DisconnectListener* listener);
 	void removeDcListener(DisconnectListener* listener);
 
+	/**
+ * Sets Communication mode, defaults to Direct mode
+ * @param mode Direct mode (default) - host a WiFi AP, External mode - connect to an existing WiFi network
+ */
+	void setMode(ComMode mode);
+
 protected:
 	void sendPacket(const ControlPacket& packet);
 	virtual bool isWiFiConnected() = 0;
 	virtual void processPacket(const ControlPacket& packet) = 0;
+
 	virtual void onLoop(uint micros){};
 
+	ComMode mode = ComMode::Direct;
+
 private:
-	void loop(uint micros) override;
+	void loop(uint micros) override final;
 	bool isClientConnected();
 	void handleDisconnect();
 	std::unique_ptr<AsyncClient> client;
 	RingBuffer data;
 
 	virtual void onConnect(){};
+
 	virtual void onDisconnect(){};
 
 	bool disconnectHandled = false;
