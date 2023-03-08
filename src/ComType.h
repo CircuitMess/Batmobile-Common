@@ -24,7 +24,8 @@ enum class ComType : uint8_t {
 	MotorsTimeout,
 	MotorsTimeoutClear,
 	IdleSounds,
-	Error
+	Error,
+	ControllerBeat
 };
 
 #endif //BATMOBILE_LIBRARY_COMTYPE_H

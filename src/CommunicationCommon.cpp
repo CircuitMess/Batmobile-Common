@@ -112,3 +112,14 @@ void CommunicationCommon::end(){
 		client.reset();
 	}
 }
+
+void CommunicationCommon::setMode(ComMode mode){
+	if(this->mode == mode) return;
+
+	if(isConnected()){
+		end();
+	}
+	this->mode = mode;
+	begin();
+}
+
